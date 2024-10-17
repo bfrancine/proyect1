@@ -1,0 +1,224 @@
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo del body */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #eaf2e2;
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+    display: block;
+}
+
+/* Contenedor principal del login */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-top: 6rem; /*  margen dinámico que cambia con el tamaño del texto */
+}
+
+/* Caja de login */
+.login-box {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 900px; /* Limita el ancho máximo en pantallas grandes */
+    background-color: rgba(122, 137, 114, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    overflow: hidden; /* Asegura que no haya contenido desbordado */
+}
+
+/* Imagen en la caja de login */
+.login-image {
+    width: 50%; /* Toma el 50% del espacio en pantallas grandes */
+    background-color: #d8e6d8; /* Color de fondo para la imagen */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+   
+}
+
+.login-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+  
+}
+
+/* Contenedor del formulario */
+.login-form {
+    width: 50%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* Estilo del título */
+.login-form h2 {
+    margin-bottom: 20px;
+    color: #333333;
+}
+
+/* Estilo para los inputs */
+.login-form input[type="email"], 
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Botón de envío */
+.login-form button {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #93be93; /* Color del botón */
+    border: none;
+    color: rgb(21, 20, 20);
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover en el botón */
+.login-form button:hover {
+    background-color: #45a049;
+}
+
+/* Estilo para el enlace de "Forgot Password?" */
+.login-form a {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #6b816c;
+    text-decoration: none;
+}
+
+/* Hover en el enlace */
+.login-form a:hover {
+    text-decoration: underline;
+}
+
+
+/* Estilos del menú de navegación */
+.main-nav {
+    width: 100%;
+   background-image: url(../img/image.png); /* Color del fondo */
+    padding: 15px 0;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative; 
+    top: 0;
+    left: 0;
+    z-index: 999;
+}
+
+.main-nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-nav ul li {
+    margin: 0 15px;
+}
+
+.main-nav ul li a {
+    text-decoration: none;
+    color: #141414;
+    font-size: 18px;
+    padding: 10px 20px;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 5px;
+}
+
+.main-nav ul li a:hover {
+    background-color: #16a085; 
+    color: white;
+}
+
+.main-nav ul li a:focus {
+    background-color: #1abc9c; 
+}
+
+/* Media queries para ajustar el diseño en pantallas pequeñas */
+@media (max-width: 768px) {
+    .login-box {
+        flex-direction: column; /* Hace que la caja de login sea vertical */
+        height: auto;
+    }
+
+    .login-image {
+        width: 100%;
+        height: auto;
+        padding: 0; /* Elimina el padding en pantallas pequeñas */
+    }
+
+    .login-form {
+        width: 100%;
+        padding: 20px; /* Reduce el padding */
+    }
+
+    .login-form h2 {
+        font-size: 1.5rem; /* Reduce el tamaño del texto */
+        margin-bottom: 10px;
+    }
+
+    .login-form input[type="email"], 
+    .login-form input[type="password"] {
+        padding: 10px;
+        font-size: 14px; /* Reduce el tamaño del texto */
+    }
+
+    .login-form button {
+        padding: 10px;
+        font-size: 14px; /* Ajuste de tamaño del botón */
+    }
+
+    .login-form a {
+        font-size: 12px;
+    }
+
+    /* Ajustes del menú de navegación */
+    .main-nav {
+        padding: 20px 0; /* Aumenta el padding en pantallas pequeñas */
+    }
+
+    .main-nav ul {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .main-nav ul li {
+        margin: 10px 0;
+    }
+
+    .main-nav ul li a {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+}
