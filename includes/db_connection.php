@@ -1,4 +1,4 @@
-// db_connection.php
+
 <?php
 $host = "localhost"; 
 $db = "project1";
