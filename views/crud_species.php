@@ -34,7 +34,7 @@ require('../includes/menu_administrator.html');
                         <td><?php echo htmlspecialchars($specie['scientific_name']); ?></td>
                         <td>
                             <!-- Botón de editar -->
-                            <a href="update_species.html?id=<?php echo urlencode($specie['id']); ?>" class="btn btn-warning">Update</a>
+                            <a href="update_species.php?id=<?php echo urlencode($specie['id']); ?>" class="btn btn-warning">Update</a>
 
                             <!-- Formulario para eliminar la especie -->
                             <form action="../logic/delete_species.php" method="post" style="display:inline;">

@@ -1,34 +1,30 @@
 <?php
-include('../includes/functions.php'); 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = $_POST['id'];
 
-// Obtiene el email del formulario
-$commercial_name = $_POST['commercial_name'] ?? null;
+    // Conexión a la base de datos
+    include('../includes/db_connection.php'); 
 
-// Validación básica
-if (empty($commercial_name)) {
-    header("Location: ../views/crud_species.php?error=El email está vacío");
-    exit();
+    // consulta SQL para eliminar la especie
+    $sql = "DELETE FROM species WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+
+    // Vincular el parámetro id a la consulta
+    $stmt->bind_param("i", $id);
+
+    // Ejecuta la consulta
+    if ($stmt->execute()) {
+        echo "Species deleted successfully.";
+    } else {
+        echo "Error deleting species: " . $stmt->error;
+    }
+
+    // Cierra la conexión
+    $stmt->close();
+    $conn->close();
+
+    // Redirige de vuelta a la lista de especies
+    header('Location: ../views/crud_species.php');
+    exit;
 }
-
-// Conectar a la base de datos
-require_once('../includes/db_connection.php');
-
-// Consulta para eliminar al usuario
-$sql = "DELETE FROM species WHERE id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $commercial_name);
-
-// Ejecuta la consulta
-if ($stmt->execute()) {
-    // Redirige a la página de éxito o muestra un mensaje
-    header("Location: ../views/crud_species.php"); 
-} else {
-    // Manejo del error
-    header("Location: ../views/crud_species.php?error=Error: " . $stmt->error);
-}
-
-// Cierra la declaración y la conexión
-$stmt->close();
-$conn->close();
 ?>
-
