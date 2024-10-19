@@ -74,4 +74,84 @@ function getSpecieById($id) {
     
         return $friends; // Devolver el array de amigos
     }
+
+    /*function getAllTrees() {
+        include('../includes/db_connection.php');// Conexión a la base de datos
+        // Consulta para obtener todos los arbolitos
+        $sql = "SELECT id, size, species_id, location, price, photo_path, state_tree_id, last_update FROM tree"; 
+        $result = $conn->query($sql);
+    
+        $users = [];
+        if ($result->num_rows > 0) {
+            // Almacena los usuarios en un array
+            while ($row = $result->fetch_assoc()) {
+                $users[] = $row;
+            }
+        }
+    
+        // Cierra la conexión
+        $conn->close();
+    
+        return $users;
+    }*/
+
+    // Función para obtener todas las especies de la tabla 'species'
+    function getSpecies() {
+        include('../includes/db_connection.php'); // Conexión a la base de datos
+    
+        $query = "SELECT id, commercial_name FROM species";  // Consulta SQL
+        $result = $conn->query($query);  // Ejecutar la consulta
+    
+        // Verifica si se obtuvieron resultados
+        if ($result->num_rows > 0) {
+            $species = []; // Array para almacenar las especies
+            while ($row = $result->fetch_assoc()) {
+                $species[] = $row; // Agregar cada fila al array
+            }
+            return $species; // Devolver el array de especies
+        } else {
+            return []; // Devolver un array vacío si no hay resultados
+        }
+    }    
+
+    // Función para obtener todos los estados de la tabla 'state_tree'
+    function getTreeStates() {
+        include('../includes/db_connection.php'); // Conexión a la base de datos
+    
+        $query = "SELECT id, type_state FROM state_tree"; // Consulta SQL
+        $result = $conn->query($query); // Ejecutar la consulta
+    
+        // Verifica si se obtuvieron resultados
+        if ($result->num_rows > 0) {
+            $states = []; // Array para almacenar los estados
+            while ($row = $result->fetch_assoc()) {
+                $states[] = $row; // Agregar cada fila al array
+            }
+            return $states; // Devolver el array de estados
+        } else {
+            return []; // Devolver un array vacío si no hay resultados
+        }
+    }
+    
+
+    function getAllTrees() {
+        include('../includes/db_connection.php');// Conexión a la base de datos
+        $trees = [];
+        // Consulta SQL para obtener los árboles
+        $sql = "SELECT t.id, t.size, s.commercial_name AS species, t.location, t.price, st.type_state, t.last_update_date 
+                FROM tree t 
+                JOIN species s ON t.species_id = s.id 
+                JOIN state_tree st ON t.state_tree_id = st.id";
+    
+        if ($result = $conn->query($sql)) {
+            while ($row = $result->fetch_assoc()) {
+                $trees[] = $row;
+            }
+            $result->free();
+        } else {
+            echo "Error: " . $conn->error; 
+        }
+    
+        return $trees;
+    }
 ?>
