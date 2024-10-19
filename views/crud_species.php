@@ -6,7 +6,8 @@ $species = getAllSpecies();
 
 require('../includes/menu_administrator.html');
 ?>
-<link rel="stylesheet" href="../css/species.css"> 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="../css/species.css">
 
 <div class="container-fluid">
     <div class="jumbotron">
