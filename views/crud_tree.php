@@ -7,6 +7,14 @@ $imagePath = "";
 $trees = getAllTrees(); 
 
 require('../includes/menu_administrator.html');
+
+// Verifica si se ha enviado el ID del árbol por la URL
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    // Función para obtener la información del árbol por ID
+    $tree = getTreeById($id); 
+}
+
 ?>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="../css/species.css">
@@ -38,10 +46,10 @@ require('../includes/menu_administrator.html');
                         ?>
                         <img src="<?php echo htmlspecialchars($imagePath); ?>" class="card-img-top" alt="Tree Photo" style="height: 200px; object-fit: cover;">
                         <div class="card-body">
-                            <h5 class="card-title">Size: <?php echo htmlspecialchars($tree['size']); ?></h5>
+                            <h5 class="card-title">Size in meters: <?php echo htmlspecialchars($tree['size']); ?></h5>
                             <h6 class="card-subtitle mb-2 text-muted">Specie: <?php echo htmlspecialchars($tree['species']); ?></h6>
                             <p class="card-text">Location: <?php echo htmlspecialchars($tree['location']); ?></p>
-                            <p class="card-text">Price: <?php echo htmlspecialchars($tree['price']); ?></p>
+                            <p class="card-text">Price: $ <?php echo htmlspecialchars($tree['price']); ?></p>
                             <p class="card-text">State: <?php echo htmlspecialchars($tree['type_state']); ?></p>
                             <p class="card-text"><small class="text-muted">Last Update: <?php echo htmlspecialchars($tree['last_update_date']); ?></small></p>
                             <a href="update_tree.php?id=<?php echo urlencode($tree['id']); ?>" class="btn btn-warning">Update</a>

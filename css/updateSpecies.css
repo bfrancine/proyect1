@@ -71,3 +71,8 @@ button[type="submit"]:hover {
     background-color: #45A049;
 }
 
+.inactive-image {
+    filter: grayscale(100%); /* Convierte la imagen a escala de grises */
+    opacity: 0.5; /* Baja la opacidad */
+}
+

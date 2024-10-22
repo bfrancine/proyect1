@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Lista de Árboles</title>
-    <link rel="stylesheet" href="../styles.css"> <!-- Si tienes un archivo CSS -->
+    <link rel="stylesheet" href="../styles.css"> 
 </head>
 <body>
     <h1>Lista de Árboles</h1>
@@ -25,7 +25,7 @@
             // Incluir el archivo que obtiene los árboles
             include('../includes/functions.php');
 
-            // Llamar a la función para obtener los árboles
+            // Llama a la función para obtener los árboles
             $trees = getAllTrees(); // Llamada a la función
 
             if (!empty($trees)): ?>

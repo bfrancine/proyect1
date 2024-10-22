@@ -162,38 +162,70 @@
         }
         return $trees; // Devuelve el array con los árboles
     }
-    
-    // Obtener árboles por ID de amigo
-    function getTreesByFriendId($friend_id) {
+
+    function getTreeById($id) {
         include('../includes/db_connection.php'); // Conexión a la base de datos
-        $stmt = $conn->prepare("
-            SELECT t.id, t.size, s.commercial_name AS species, t.location 
-            FROM tree t
-            JOIN tree_friend tf ON t.id = tf.tree_id
-            JOIN species s ON t.species_id = s.id
-            WHERE tf.friend_id = ?
-        ");
-        
-        // Vincular el parámetro friend_id
-        $stmt->bind_param("i", $friend_id);
-        
-        // Ejecutar la consulta
+    
+        // Prepara la consulta para obtener el árbol por ID
+        $sql = "SELECT * FROM tree WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+    
+        // Vincula el parámetro ID para evitar inyecciones SQL
+        $stmt->bind_param("i", $id);
+    
+        // Ejecuta la consulta
         $stmt->execute();
-        
-        // Obtener el resultado
-        $result = $stmt->get_result(); // Obtener el resultado como un objeto de resultados
-
-        $trees = []; // Inicializar el array para almacenar árboles
-
-        // Recorrer los resultados y agregarlos al array
-        while ($row = $result->fetch_assoc()) {
-            $trees[] = $row; // Agregar cada árbol al array
+    
+        // Obtiene el resultado
+        $result = $stmt->get_result();
+    
+        // Verifica si se encontró una fila y la devuelve como un array asociativo
+        if ($result->num_rows > 0) {
+            $data = $result->fetch_assoc(); // Devuelve los datos del árbol
+        } else {
+            $data = null; // Si no se encuentra, devuelve null
         }
-        // Cerrar el statement y la conexión
+    
+        // Cierra el statement y la conexión
         $stmt->close();
         $conn->close();
-        return $trees; // Devolver el array de árboles
+    
+        return $data; // Devuelve los datos o null
     }
+    
+    
+    // Obtener árboles por ID de amigo
+function getTreesByFriendId($friend_id) {
+    include('../includes/db_connection.php'); // Conexión a la base de datos
+    $stmt = $conn->prepare("
+        SELECT t.id, t.size, s.commercial_name AS species, t.location, t.photo_path 
+        FROM tree t
+        JOIN tree_friend tf ON t.id = tf.tree_id
+        JOIN species s ON t.species_id = s.id
+        WHERE tf.friend_id = ?
+    ");
+    
+    // Vincular el parámetro friend_id
+    $stmt->bind_param("i", $friend_id);
+    
+    // Ejecutar la consulta
+    $stmt->execute();
+    
+    // Obtener el resultado
+    $result = $stmt->get_result(); // Obtener el resultado como un objeto de resultados
+
+    $trees = []; // Inicializar el array para almacenar árboles
+
+    // Recorrer los resultados y agregarlos al array
+    while ($row = $result->fetch_assoc()) {
+        $trees[] = $row; // Agregar cada árbol al array
+    }
+    // Cerrar el statement y la conexión
+    $stmt->close();
+    $conn->close();
+    return $trees; // Devolver el array de árboles
+}
+
 
     
 ?>
