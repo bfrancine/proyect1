@@ -1,33 +1,31 @@
 <?php
 include('../includes/functions.php'); //incluimos las funciones
-
 $species = getSpecies(); //obtenemos las especies
 $treeStates = getTreeStates(); //obtenemos los estados
-var_dump($species);
-var_dump($treeStates);
-
+//var_dump($species);
+//var_dump($treeStates);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/species.css"> <!-- Incluye tu archivo de estilo -->
-    <title>Add New Species</title>
+    <link rel="stylesheet" href="../css/species.css">
+    <title>Add New Tree</title>
 </head>
 <body>
     <div class="container">
         <h1>Add New Tree</h1>
-        <form action="../logic/add_tree.php" method="post">
+        <form action="../logic/add_tree.php" method="post" enctype="multipart/form-data"> <!-- multipart es idea para subir archivos mediante un forms -->
             <div class="form-group">
                 <label for="size">Size:</label>
                 <input type="text" id="size" name="size" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="species">Especie</label>
+                <label for="species">Specie</label>
                 <select id="species" class="form-control" name="species">
                     <?php
-                    // Rellenar el select de especies
+                    // Rellena el select de especies
                     foreach($species as $specie) {
                         echo "<option value=\"{$specie['id']}\">{$specie['commercial_name']}</option>";
                     }
@@ -44,19 +42,20 @@ var_dump($treeStates);
             </div>
             <div class="form-group">
                 <label for="photo_path">Photo Tree</label>
+                <!-- Ayuda a cargar las imaganes -->
                 <input type="file" class="form-control" name="photo_path" id="photo_path" accept="image/png, image/jpeg" multiple="true">
-              </div>
-              <div class="form-group">
-            <label for="tree_state">Estado del Árbol</label>
-            <select id="tree_state" class="form-control" name="tree_state">
-                <?php
-                // Rellenar el select de estados de los árboles
-                foreach($treeStates as $state) {
-                    echo "<option value=\"{$state['id']}\">{$state['type_state']}</option>";
-                }
-                ?>
-            </select>
-        </div>
+            </div>
+            <div class="form-group">
+                <label for="tree_state">Status of the Tree</label>
+                <select id="tree_state" class="form-control" name="tree_state">
+                    <?php
+                    // Rellenar el select de estados de los árboles
+                    foreach($treeStates as $state) {
+                        echo "<option value=\"{$state['id']}\">{$state['type_state']}</option>";
+                    }
+                    ?>
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary">Add Tree</button>
         </form>
     </div>

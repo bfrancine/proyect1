@@ -1,57 +1,57 @@
 <?php
-//Funcio para obtener todas las especies
-function getAllSpecies() {
-    include('../includes/db_connection.php');// Conexión a la base de datos
-    // Consulta para obtener todos las especies
-    $sql = "SELECT id, commercial_name, scientific_name FROM species"; 
-    $result = $conn->query($sql);
+    //Funcio para obtener todas las especies
+    function getAllSpecies() {
+        include('../includes/db_connection.php');// Conexión a la base de datos
+        // Consulta para obtener todos las especies
+        $sql = "SELECT id, commercial_name, scientific_name FROM species"; 
+        $result = $conn->query($sql);
 
-    $users = [];
-    if ($result->num_rows > 0) {
-        // Almacena los usuarios en un array
-        while ($row = $result->fetch_assoc()) {
-            $users[] = $row;
+        $users = [];
+        if ($result->num_rows > 0) {
+            // Almacena los usuarios en un array
+            while ($row = $result->fetch_assoc()) {
+                $users[] = $row;
+            }
         }
+
+        // Cierra la conexión
+        $conn->close();
+
+        return $users;
+    }
+    //funcion para obtener el ID de especie 
+    function getSpecieById($id) {
+        include('../includes/db_connection.php');// Conexión a la base de datos
+
+        // Prepara la consulta para obtener la especie por ID
+        $sql = "SELECT * FROM species WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+
+        // Vincula el parámetro ID para evitar inyecciones SQL
+        $stmt->bind_param("i", $id);
+
+        // Ejecuta la consulta
+        $stmt->execute();
+
+        // Obtiene el resultado
+        $result = $stmt->get_result();
+
+        // Verifica si se encontró una fila y la devuelve como un array asociativo
+        if ($result->num_rows > 0) {
+            $data = $result->fetch_assoc(); // Devuelve los datos de la especie
+        } else {
+            $data = null; // Si no se encuentra, devuelve null
+        }
+
+        // Cierra el statement y la conexión
+        $stmt->close();
+        $conn->close();
+
+        return $data; // Devuelve los datos o null
     }
 
-    // Cierra la conexión
-    $conn->close();
 
-    return $users;
-}
-//funcion para obtener el ID de especie 
-function getSpecieById($id) {
-    include('../includes/db_connection.php');// Conexión a la base de datos
-
-    // Prepara la consulta para obtener la especie por ID
-    $sql = "SELECT * FROM species WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-
-    // Vincula el parámetro ID para evitar inyecciones SQL
-    $stmt->bind_param("i", $id);
-
-    // Ejecuta la consulta
-    $stmt->execute();
-
-    // Obtiene el resultado
-    $result = $stmt->get_result();
-
-    // Verifica si se encontró una fila y la devuelve como un array asociativo
-    if ($result->num_rows > 0) {
-        $data = $result->fetch_assoc(); // Devuelve los datos de la especie
-    } else {
-        $data = null; // Si no se encuentra, devuelve null
-    }
-
-    // Cierra el statement y la conexión
-    $stmt->close();
-    $conn->close();
-
-    return $data; // Devuelve los datos o null
-}
-
-
-// Función para obtener todos los amigos
+    // Función para obtener todos los amigos
     function getAllFriends() {
         // Incluir la conexión a la base de datos
         include('../includes/db_connection.php');
@@ -71,7 +71,6 @@ function getSpecieById($id) {
     
         // Cerrar la conexión
         $conn->close();
-    
         return $friends; // Devolver el array de amigos
     }
     function getFriendById($id) {
@@ -103,25 +102,6 @@ function getSpecieById($id) {
     
         return $data; // Devuelve los datos o null
     }
-    /*function getAllTrees() {
-        include('../includes/db_connection.php');// Conexión a la base de datos
-        // Consulta para obtener todos los arbolitos
-        $sql = "SELECT id, size, species_id, location, price, photo_path, state_tree_id, last_update FROM tree"; 
-        $result = $conn->query($sql);
-    
-        $users = [];
-        if ($result->num_rows > 0) {
-            // Almacena los usuarios en un array
-            while ($row = $result->fetch_assoc()) {
-                $users[] = $row;
-            }
-        }
-    
-        // Cierra la conexión
-        $conn->close();
-    
-        return $users;
-    }*/
 
     // Función para obtener todas las especies de la tabla 'species'
     function getSpecies() {
@@ -147,7 +127,7 @@ function getSpecieById($id) {
         include('../includes/db_connection.php'); // Conexión a la base de datos
     
         $query = "SELECT id, type_state FROM state_tree"; // Consulta SQL
-        $result = $conn->query($query); // Ejecutar la consulta
+        $result = $conn->query($query); // Ejecuta la consulta
     
         // Verifica si se obtuvieron resultados
         if ($result->num_rows > 0) {
@@ -160,61 +140,60 @@ function getSpecieById($id) {
             return []; // Devolver un array vacío si no hay resultados
         }
     }
-    
 
+    //Funcion para obtener todos los árboles
     function getAllTrees() {
-        include('../includes/db_connection.php');// Conexión a la base de datos
+        include('../includes/db_connection.php'); // Conexión a la base de datos
         $trees = [];
-        // Consulta SQL para obtener los árboles
-        $sql = "SELECT t.id, t.size, s.commercial_name AS species, t.location, t.price, st.type_state, t.last_update_date 
+        
+        // Consulta SQL con JOIN para obtener los árboles
+        $sql = "SELECT t.id, t.size, s.commercial_name AS species, t.location, t.price, st.type_state, t.photo_path, t.last_update_date 
                 FROM tree t 
                 JOIN species s ON t.species_id = s.id 
                 JOIN state_tree st ON t.state_tree_id = st.id";
     
         if ($result = $conn->query($sql)) {
             while ($row = $result->fetch_assoc()) {
-                $trees[] = $row;
+                $trees[] = $row; // Agrega cada árbol al array
             }
             $result->free();
         } else {
             echo "Error: " . $conn->error; 
         }
-    
-        return $trees;
+        return $trees; // Devuelve el array con los árboles
     }
-// Obtener árboles por ID de amigo
-function getTreesByFriendId($friend_id) {
-    include('../includes/db_connection.php'); // Conexión a la base de datos
-    $stmt = $conn->prepare("
-        SELECT t.id, t.size, s.commercial_name AS species, t.location 
-        FROM tree t
-        JOIN tree_friend tf ON t.id = tf.tree_id
-        JOIN species s ON t.species_id = s.id
-        WHERE tf.friend_id = ?
-    ");
     
-    // Vincular el parámetro friend_id
-    $stmt->bind_param("i", $friend_id);
-    
-    // Ejecutar la consulta
-    $stmt->execute();
-    
-    // Obtener el resultado
-    $result = $stmt->get_result(); // Obtener el resultado como un objeto de resultados
+    // Obtener árboles por ID de amigo
+    function getTreesByFriendId($friend_id) {
+        include('../includes/db_connection.php'); // Conexión a la base de datos
+        $stmt = $conn->prepare("
+            SELECT t.id, t.size, s.commercial_name AS species, t.location 
+            FROM tree t
+            JOIN tree_friend tf ON t.id = tf.tree_id
+            JOIN species s ON t.species_id = s.id
+            WHERE tf.friend_id = ?
+        ");
+        
+        // Vincular el parámetro friend_id
+        $stmt->bind_param("i", $friend_id);
+        
+        // Ejecutar la consulta
+        $stmt->execute();
+        
+        // Obtener el resultado
+        $result = $stmt->get_result(); // Obtener el resultado como un objeto de resultados
 
-    $trees = []; // Inicializar el array para almacenar árboles
-    
-    // Recorrer los resultados y agregarlos al array
-    while ($row = $result->fetch_assoc()) {
-        $trees[] = $row; // Agregar cada árbol al array
+        $trees = []; // Inicializar el array para almacenar árboles
+
+        // Recorrer los resultados y agregarlos al array
+        while ($row = $result->fetch_assoc()) {
+            $trees[] = $row; // Agregar cada árbol al array
+        }
+        // Cerrar el statement y la conexión
+        $stmt->close();
+        $conn->close();
+        return $trees; // Devolver el array de árboles
     }
-
-    // Cerrar el statement y la conexión
-    $stmt->close();
-    $conn->close();
-
-    return $trees; // Devolver el array de árboles
-}
 
     
 ?>
