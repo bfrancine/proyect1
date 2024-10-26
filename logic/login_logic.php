@@ -2,14 +2,15 @@
 // Incluir la conexión a la base de datos
 include('../includes/db_connection.php'); 
 
+// Iniciar sesión antes de la lógica de redirección
+session_start();
+
 // Recibir datos del formulario
 $email = isset($_POST['email']) ? $_POST['email'] : '';
 $password = isset($_POST['password']) ? $_POST['password'] : '';
 
-
-// Verificar que los campos no estén vacíos
 if (empty($email) || empty($password)) {
-    die("Por favor, completa todos los campos.");
+    die("Please complete all fields.");
 }
 
 // Consultar si el usuario es un administrador
@@ -22,15 +23,15 @@ $result = $stmt->get_result();
 if ($result->num_rows > 0) {
     $admin = $result->fetch_assoc();
     
-    // Verificar la contraseña usando MD5
-    if (md5($password) === $admin['password']) {
+    // Verificar la contraseña
+    if (md5($password) === $admin['password']) { // Comparar el hash
         // Contraseña correcta
-        session_start(); // Iniciar sesión
         $_SESSION['admin_logged_in'] = true; // Marca que el usuario es un administrador
-        header("Location: ../views/dashboard.php"); // Redirige al dashboard
-        exit(); // Termina el script
+        header("Location: ../views/dashboard.php");
+        exit(); 
     } else {
-        echo "Contraseña incorrecta.";
+        header("Location: ../index.php?error=incorrect_password");
+        exit(); 
     }
 } else {
     // Consultar si el usuario es un amigo
@@ -41,13 +42,23 @@ if ($result->num_rows > 0) {
     $result_friends = $stmt_friends->get_result();
 
     if ($result_friends->num_rows > 0) {
-        // Si es amigo, mostrar mensaje de error
-        echo '<div class="error-message">No puedes acceder a esta página porque no eres un administrador.</div>';
+        $friend = $result_friends->fetch_assoc();
+        
+        // Verificar la contraseña
+        if (md5($password) === $friend['password']) { // Comparar el hash
+            // Contraseña correcta
+            $_SESSION['friend_logged_in'] = true; // Marca que el usuario es un amigo
+            $_SESSION['friend_id'] = $friend['id']; // Almacenar el ID del amigo en la sesión
+            header("Location: ../views/friend_dashboard.php");
+            exit();
+        } else {
+            header("Location: ../index.php?error=incorrect_password");
+            exit();
+        }
     } else {
-        echo '<div class="error-message">Usuario no encontrado.</div>';
+        header("Location: ../index.php?error=user_not_found");
+        exit();
     }
-    
-    
 }
 
 // Cerrar la conexión

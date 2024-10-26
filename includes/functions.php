@@ -164,34 +164,23 @@
     }
 
     function getTreeById($id) {
-        include('../includes/db_connection.php'); // Conexión a la base de datos
-    
-        // Prepara la consulta para obtener el árbol por ID
-        $sql = "SELECT * FROM tree WHERE id = ?";
+        include('../includes/db_connection.php');
+        $sql = "SELECT t.id, t.size, t.location, t.price, t.photo_path, t.species_id, t.state_tree_id, s.commercial_name
+                FROM tree t
+                JOIN species s ON t.species_id = s.id
+                WHERE t.id = ?";
         $stmt = $conn->prepare($sql);
-    
-        // Vincula el parámetro ID para evitar inyecciones SQL
         $stmt->bind_param("i", $id);
-    
-        // Ejecuta la consulta
         $stmt->execute();
-    
-        // Obtiene el resultado
         $result = $stmt->get_result();
     
-        // Verifica si se encontró una fila y la devuelve como un array asociativo
         if ($result->num_rows > 0) {
-            $data = $result->fetch_assoc(); // Devuelve los datos del árbol
+            return $result->fetch_assoc();
         } else {
-            $data = null; // Si no se encuentra, devuelve null
+            return null;
         }
-    
-        // Cierra el statement y la conexión
-        $stmt->close();
-        $conn->close();
-    
-        return $data; // Devuelve los datos o null
     }
+    
     
     
     // Obtener árboles por ID de amigo
@@ -225,7 +214,79 @@ function getTreesByFriendId($friend_id) {
     $conn->close();
     return $trees; // Devolver el array de árboles
 }
+function getAvailableTrees(){
+    // Incluir la conexión a la base de datos
+    include('../includes/db_connection.php'); 
+
+    // Consulta para obtener los árboles que están en estado "Disponible"
+    $sql = "SELECT tree.*, species.commercial_name, state_tree.type_state 
+            FROM tree 
+            JOIN species ON tree.species_id = species.id
+            JOIN state_tree ON tree.state_tree_id = state_tree.id
+            WHERE state_tree.type_state = 'Disponible'";
+
+    // Ejecutar la consulta
+    $result = $conn->query($sql);
+
+    // Inicializar un array para almacenar los árboles
+    $availableTrees = [];
+
+    // Verificar si hay resultados y almacenarlos en el array
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $availableTrees[] = $row;
+        }
+    }
+
+    // Cerrar la conexión a la base de datos
+    $conn->close();
+
+    // Devolver los árboles disponibles
+    return $availableTrees;
+}
+function purchaseTree($treeId, $friend_id) {
+    include('../includes/db_connection.php'); // Conexión a la base de datos
+
+    // Iniciar transacción
+    $conn->begin_transaction();
+
+    try {
+        // Cambiar el estado del árbol a 'Vendido'
+        $updateTreeSql = "UPDATE tree SET state_tree_id = (SELECT id FROM state_tree WHERE type_state = 'Vendido') WHERE id = ?";
+        $stmt = $conn->prepare($updateTreeSql);
+        $stmt->bind_param("i", $treeId);
+        $stmt->execute();
+
+        // Registrar la compra en la tabla `purchase`
+        $insertPurchaseSql = "INSERT INTO purchase (friend_id, purchase_date, total_amount) VALUES (?, NOW(), (SELECT price FROM tree WHERE id = ?))";
+        $stmt = $conn->prepare($insertPurchaseSql);
+        $stmt->bind_param("ii", $friend_id, $treeId);
+        $stmt->execute();
+
+        // Obtener el ID de la compra recién creada
+        $purchaseId = $conn->insert_id;
+
+        // Registrar la relación entre la compra y el árbol en la tabla `purchase_tree`
+        $insertPurchaseTreeSql = "INSERT INTO purchase_tree (purchase_id, tree_id, price_at_purchase) VALUES (?, ?, (SELECT price FROM tree WHERE id = ?))";
+        $stmt = $conn->prepare($insertPurchaseTreeSql);
+        $stmt->bind_param("iii", $purchaseId, $treeId, $treeId);
+        $stmt->execute();
+
+        // relacionar el árbol con el amigo en `tree_friend`
+        $insertTreeFriendSql = "INSERT INTO tree_friend (friend_id, tree_id) VALUES (?, ?)";
+        $stmt = $conn->prepare($insertTreeFriendSql);
+        $stmt->bind_param("ii", $friend_id, $treeId);
+        $stmt->execute();
+        
+        // Confirmar la transacción
+        $conn->commit();
+        return true; // Compra exitosa
+    } catch (Exception $e) {
+        // En caso de error, deshacer la transacción
+        $conn->rollback();
+        return false; // Fallo en la compra
+    }
+}
 
 
-    
 ?>

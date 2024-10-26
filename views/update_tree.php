@@ -17,6 +17,9 @@
             $id = $_GET['id'];
             // Función para obtener la información del árbol por ID
             $tree = getTreeById($id); 
+        } else {
+            echo "No tree selected.";
+            exit();
         }
         ?>
 
@@ -33,7 +36,7 @@
             <br>
             <!-- ID de la especie -->
             <label for="species_id">Species</label>
-            <select name="species_id">
+            <select name="species_id" required>
                 <?php
                 // Obtener todas las especies para mostrarlas en el dropdown
                 $speciesList = getAllSpecies();
@@ -64,7 +67,7 @@
             <br>
             <!-- Estado del árbol -->
             <label for="state_tree_id">State</label>
-            <select name="state_tree_id">
+            <select name="state_tree_id" required>
                 <?php
                 // Obtener todos los estados del árbol para mostrarlos en el dropdown
                 $stateList = getTreeStates();

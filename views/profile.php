@@ -47,7 +47,7 @@ if (isset($_GET['friend_id'])) {
                                 <h5 class="card-title">Specie: <?php echo htmlspecialchars($tree['species']); ?></h5>
                                 <h6 class="card-subtitle mb-2 text-muted">Size: <?php echo htmlspecialchars($tree['size']); ?></h6>
                                 <p class="card-text">Location: <?php echo htmlspecialchars($tree['location']); ?></p>
-                                <a href="update.php?id=<?php echo urlencode($tree['id']); ?>" class="btn btn-warning">Update</a>
+                                <a href="update_tree.php?id=<?php echo urlencode($tree['id']); ?>" class="btn btn-warning">Update</a>
                                 </div>
                         </div>
                     </div>
