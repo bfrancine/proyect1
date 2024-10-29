@@ -11,7 +11,7 @@ $result_users = $conn->query($sql_users);
 $total_users = $result_users->fetch_assoc()['total_users'];
 
 // Consulta total de árboles disponibles
-$sql_trees = "SELECT COUNT(*) AS total_trees FROM tree WHERE state_tree_id = (SELECT id FROM state_tree WHERE type_state = 'Disponible')";
+$sql_trees = "SELECT COUNT(*) AS total_trees FROM tree WHERE state_tree_id = (SELECT id FROM state_tree WHERE type_state = 'Disponible' or type_state = 'Available')";
 $result_trees = $conn->query($sql_trees);
 $total_trees = $result_trees->fetch_assoc()['total_trees'];
 
@@ -22,9 +22,9 @@ $total_sold_trees = $result_sold_trees->fetch_assoc()['total_sold_trees'];
 
 // Mostrar los resultados
 echo "<h2>Dashboard</h2>";
-echo "<p>Cantidad de Amigos Registrados: " . $total_users . "</p>";
-echo "<p>Cantidad de Árboles disponibles: " . $total_trees . "</p>";
-echo "<p>Cantidad de Árboles vendidos: " . $total_sold_trees . "</p>";
+echo "<p>Number of Registered Friends: " . $total_users . "</p>";
+echo "<p>Number of Trees Available: " . $total_trees . "</p>";
+echo "<p>Number of Trees Sold: " . $total_sold_trees . "</p>";
 
 // Cerrar la conexión
 $conn->close();

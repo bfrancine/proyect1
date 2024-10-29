@@ -1,6 +1,5 @@
 <?php include 'includes/header.html';  ?>
 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -20,6 +19,7 @@
                 <form action="logic/login_logic.php" method="POST">
                     <input type="email" name="email" placeholder="Email" required>
                     <input type="password" name="password" placeholder="Password" required>
+                    <input type="hidden" name="friend_id" value="<?php echo isset($_GET['friend_id']) ? htmlspecialchars($_GET['friend_id']) : ''; ?>">
                     <button type="submit">Login</button>
                     <a href="#">Forgot Password?</a>
                 </form>
@@ -28,3 +28,4 @@
     </div>
 </body>
 </html>
+

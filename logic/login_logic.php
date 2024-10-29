@@ -49,7 +49,7 @@ if ($result->num_rows > 0) {
             // Contraseña correcta
             $_SESSION['friend_logged_in'] = true; // Marca que el usuario es un amigo
             $_SESSION['friend_id'] = $friend['id']; // Almacenar el ID del amigo en la sesión
-            header("Location: ../views/friend_dashboard.php");
+            header("Location: ../views/friend_dashboard.php?friend_id=" . urlencode($friend['id']));
             exit();
         } else {
             header("Location: ../index.php?error=incorrect_password");
@@ -66,3 +66,4 @@ $stmt->close();
 $stmt_friends->close();
 $conn->close();
 ?>
+
