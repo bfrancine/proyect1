@@ -192,7 +192,7 @@
             WHERE tf.friend_id = ?
         ");
         
-        // Vincular el parámetro friend_id
+        // Vincula el parámetro friend_id
         $stmt->bind_param("i", $friend_id);
         
         // Ejecutar la consulta
@@ -243,7 +243,7 @@
         // Devolver los árboles disponibles
         return $availableTrees;
     }
-    
+
     function purchaseTree($treeId, $friend_id) {
         include('../includes/db_connection.php'); // Conexión a la base de datos
 
@@ -287,6 +287,8 @@
             return false; // Fallo en la compra
         }
     }
+
+
 
 
 ?>
