@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/species.css"> <!-- Incluye tu archivo de estilo -->
+    <link rel="stylesheet" href="../css/updateSpecies.css"> 
     <title>Add New Species</title>
 </head>
 <body>
     <div class="container">
         <h1>Add New Species</h1>
-        <form action="../logic/add_species.php" method="post">
+        <form action="../logic/add_species.php" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="commercial_name">Commercial Name:</label>
                 <input type="text" id="commercial_name" name="commercial_name" class="form-control" required>

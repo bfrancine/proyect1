@@ -1,29 +1,29 @@
 <?php
-include('../includes/functions.php'); //incluimos las funciones
-$species = getSpecies(); //obtenemos las especies
-$treeStates = getTreeStates(); //obtenemos los estados
-//var_dump($species);
-//var_dump($treeStates);
+include('../includes/functions.php'); // Incluimos las funciones
+$species = getSpecies(); // Obtenemos las especies
+$treeStates = getTreeStates(); // Obtenemos los estados
+// var_dump($species);
+// var_dump($treeStates);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/species.css">
+    <link rel="stylesheet" href="../css/updateSpecies.css"> <!-- Usar el mismo CSS -->
     <title>Add New Tree</title>
 </head>
 <body>
     <div class="container">
         <h1>Add New Tree</h1>
-        <form action="../logic/add_tree.php" method="post" enctype="multipart/form-data"> <!-- multipart es idea para subir archivos mediante un forms -->
+        <form action="../logic/add_tree.php" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="size">Size:</label>
                 <input type="text" id="size" name="size" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="species">Specie</label>
-                <select id="species" class="form-control" name="species">
+                <label for="species">Species:</label>
+                <select id="species" class="form-control" name="species" required>
                     <?php
                     // Rellena el select de especies
                     foreach($species as $specie) {
@@ -37,17 +37,16 @@ $treeStates = getTreeStates(); //obtenemos los estados
                 <input type="text" id="location" name="location" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="price">Price :</label>
-                <input type="text" id="price" name="price" class="form-control">
+                <label for="price">Price:</label>
+                <input type="text" id="price" name="price" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="photo_path">Photo Tree</label>
-                <!-- Ayuda a cargar las imaganes -->
-                <input type="file" class="form-control" name="photo_path" id="photo_path" accept="image/png, image/jpeg" multiple="true">
+                <label for="photo_path">Tree Photo:</label>
+                <input type="file" class="form-control" name="photo_path" id="photo_path" accept="image/png, image/jpeg" multiple="true" required>
             </div>
             <div class="form-group">
-                <label for="tree_state">Status of the Tree</label>
-                <select id="tree_state" class="form-control" name="tree_state">
+                <label for="tree_state">Tree Status:</label>
+                <select id="tree_state" class="form-control" name="tree_state" required>
                     <?php
                     // Rellenar el select de estados de los árboles
                     foreach($treeStates as $state) {
