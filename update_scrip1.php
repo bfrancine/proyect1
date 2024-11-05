@@ -13,9 +13,9 @@ use PHPMailer\PHPMailer\Exception;
 // Obtener la fecha de hace un mes
 $oneMonthAgo = date('Y-m-d', strtotime('-1 month'));
 
-// Consulta para obtener árboles que no han sido actualizados en el último mes
+// Consulta SQL para verificar los árboles que no han sido actualizados
 $sql = "
-    SELECT tree.id, species.commercial_name 
+    SELECT tree.id, species.commercial_name, tree.location, tree.price 
     FROM tree
     JOIN species ON tree.species_id = species.id
     WHERE tree.last_update_date < ?
@@ -25,12 +25,12 @@ $stmt->bind_param("s", $oneMonthAgo);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Verificar si hay resultados
+// Verifica si hay resultados
 if ($result->num_rows > 0) {
-    // Construir el mensaje del correo
+    // Mensaje que se verá en el correo
     $message = "Los siguientes árboles no han sido actualizados desde hace más de 1 mes:\n";
     while ($row = $result->fetch_assoc()) {
-        $message .= "- " . $row['commercial_name'] . " (ID: " . $row['id'] . ")\n";
+        $message .= "- " . $row['commercial_name'] . " (ID: " . $row['id'] . ", Ubicación: " . $row['location'] . ", Precio: " . $row['price'] . ")\n";
     }
 
     // Configuración de PHPMailer
@@ -41,23 +41,24 @@ if ($result->num_rows > 0) {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com'; // Servidor SMTP de Gmail
         $mail->SMTPAuth = true;
-        $mail->Username = 'alondra.rm790@gmail.com'; // Reemplaza con tu correo de Gmail
-        $mail->Password = 'uvma ohif pkpp imxk'; // Reemplaza con tu contraseña de Gmail o una contraseña de aplicación
+        $mail->Username = 'alondra.rm790@gmail.com'; // Correo de Gmail
+        $mail->Password = 'uvma ohif pkpp imxk'; // Contraseña de aplicación
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
         // Configuración del correo
         $mail->setFrom('alondra.rm790@gmail.com', 'Nombre del remitente');
-        $mail->addAddress('alondra.rm790@gmail.com'); // Dirección del administrador
+        $mail->addAddress('alondra.rm790@gmail.com'); // Correo del administrador1
+        $mail->addAddress('bfrancini1@gmail.com'); // Correo del administrador2
 
         // Contenido del correo
         $mail->isHTML(false);
         $mail->Subject = 'Aviso: Árboles desactualizados';
         $mail->Body = $message;
 
-        // Enviar el correo
+        // Envia el correo
         $mail->send();
-        echo "Correo enviado correctamente al administrador.";
+        echo "Correo enviado correctamente a los administradores.";
     } catch (Exception $e) {
         echo "Error al enviar el correo: {$mail->ErrorInfo}";
     }
